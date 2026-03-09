@@ -1,15 +1,838 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>IELTS Practice Platform</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>IELTS Practice Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Lora:wght@400;600&family=DM+Sans:wght@400;600;700&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#faf8f3;font-family:'Lora',Georgia,serif;color:#0f0e0c}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:#f2ede0}
+::-webkit-scrollbar-thumb{background:#ddd8c8;border-radius:3px}
+textarea:focus{outline:none;border-color:#c9a84c!important;box-shadow:0 0 0 3px #c9a84c22}
+button{cursor:pointer;transition:opacity .15s}
+button:hover{opacity:.88}
+.screen{display:none}
+.screen.active{display:block}
+.tag{background:#f2ede0;border:1px solid #ddd8c8;border-radius:20px;padding:4px 12px;font-family:'DM Sans',sans-serif;font-size:12px;color:#7a7060;display:inline-block}
+.tip-box{border-radius:12px;padding:16px 20px;margin-bottom:24px;display:flex;gap:12px;align-items:flex-start}
+.tip-box .tip-icon{font-size:20px;flex-shrink:0}
+.tip-label{font-family:'DM Sans',sans-serif;font-weight:700;font-size:12px;letter-spacing:.1em;margin-bottom:4px}
+.tip-text{font-family:'Lora',serif;color:#7a7060;font-size:14px;line-height:1.7}
+.section-nav{display:flex;gap:4px;margin-bottom:24px}
+.section-tab{flex:1;padding:10px 6px;border-radius:10px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:12px;border:1px solid #ddd8c8;background:#f2ede0;color:#7a7060;text-align:center}
+.section-tab.active{background:#0f0e0c;color:#faf8f3;border-color:#0f0e0c}
+.section-tab.done{background:#5a7a5e22;border-color:#5a7a5e88;color:#5a7a5e}
+.card{border:1px solid #ddd8c8;border-radius:12px;padding:18px 20px;background:#fff;margin-bottom:14px}
+.option-btn{width:100%;text-align:left;padding:10px 14px;border-radius:8px;border:1.5px solid #ddd8c8;background:#fff;font-family:'Lora',serif;font-size:14px;color:#0f0e0c;margin-bottom:8px;display:block}
+.option-btn.selected{background:#3a4a5c18;border-color:#3a4a5c;color:#3a4a5c}
+.option-btn.correct{background:#5a7a5e22;border-color:#5a7a5e;color:#5a7a5e}
+.option-btn.wrong{background:#b85c3822;border-color:#b85c38;color:#b85c38}
+.tfng-row{display:flex;gap:6px;margin-top:8px}
+.tfng-btn{flex:1;padding:6px 4px;border-radius:6px;border:1.5px solid #ddd8c8;background:#fff;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;color:#7a7060;text-align:center}
+.tfng-btn.ng{flex:2}
+.tfng-btn.selected{background:#c9a84c28;border-color:#c9a84c;color:#8a6f2e}
+.tfng-btn.correct{background:#5a7a5e22;border-color:#5a7a5e;color:#5a7a5e}
+.tfng-btn.wrong{background:#b85c3822;border-color:#b85c38;color:#b85c38}
+.submit-btn{width:100%;padding:14px;border-radius:10px;border:none;background:#0f0e0c;color:#faf8f3;font-family:'DM Sans',sans-serif;font-weight:700;font-size:15px;margin-top:12px}
+.next-btn{width:100%;padding:13px;border-radius:10px;border:none;background:#c9a84c;color:#0f0e0c;font-family:'DM Sans',sans-serif;font-weight:700;font-size:14px;margin-top:12px}
+.score-box{background:#f2ede0;border:1px solid #ddd8c8;border-radius:14px;padding:20px 24px;text-align:center;margin-top:16px}
+.score-num{font-family:'Playfair Display',serif;font-size:40px;font-weight:700}
+.score-msg{font-family:'DM Sans',sans-serif;color:#7a7060;font-size:13px;margin-top:4px}
+.explanation{margin-top:12px;padding:12px 14px;background:#f2ede0;border-radius:8px;font-size:13px;line-height:1.7;color:#7a7060}
+.passage-box{background:#f2ede0;border-radius:12px;padding:20px;border:1px solid #ddd8c8;max-height:480px;overflow-y:auto;font-size:14px;line-height:1.9}
+.passage-box p{margin-bottom:14px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.label{font-family:'DM Sans',sans-serif;font-weight:700;font-size:11px;letter-spacing:.12em;color:#7a7060;margin-bottom:10px}
+.prompt-box{background:#f2ede0;border-radius:12px;padding:18px;border:1px solid #ddd8c8;margin-bottom:14px}
+.prompt-box p{font-size:14px;line-height:1.7;margin-bottom:8px}
+.prompt-note{font-family:'DM Sans',sans-serif;font-size:12px;color:#8a6f2e}
+textarea{width:100%;padding:14px;font-family:'Lora',serif;font-size:14px;line-height:1.8;border:1.5px solid #ddd8c8;border-radius:12px;resize:vertical;color:#0f0e0c;background:#fff;min-height:200px}
+.wc{font-family:'JetBrains Mono',monospace;font-size:12px;text-align:right;margin-top:4px}
+.wc.ok{color:#5a7a5e} .wc.warn{color:#c9a84c} .wc.low{color:#7a7060}
+.feedback-header{background:linear-gradient(135deg,#0f0e0c,#3a4a5c);border-radius:14px;padding:20px;color:#faf8f3;margin-top:18px}
+.band-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:12px}
+.band-cell{text-align:center}
+.band-val{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:#e8d5a0}
+.band-lbl{font-family:'DM Sans',sans-serif;font-size:10px;opacity:.7}
+.strength-item{border-left:3px solid #5a7a5e;padding-left:12px;margin-bottom:10px}
+.strength-quote{font-family:'JetBrains Mono',monospace;font-size:12px;color:#5a7a5e;margin-bottom:4px}
+.improve-item{background:#f2ede0;border-radius:10px;padding:14px;margin-bottom:10px;border:1px solid #ddd8c8}
+.improve-orig{font-family:'JetBrains Mono',monospace;font-size:12px;color:#b85c38;margin-bottom:6px}
+.improve-fix{font-family:'JetBrains Mono',monospace;font-size:12px;color:#5a7a5e;margin-bottom:6px}
+.improve-why{font-size:12px;color:#7a7060;line-height:1.6}
+.priority-box{background:#c9a84c22;border:1px solid #c9a84c88;border-radius:10px;padding:14px;margin-top:12px}
+.priority-lbl{font-family:'DM Sans',sans-serif;font-weight:700;font-size:12px;color:#8a6f2e;margin-bottom:6px}
+.model-toggle{width:100%;padding:9px;border:1px solid #ddd8c8;border-radius:8px;background:transparent;font-family:'DM Sans',sans-serif;font-size:13px;color:#7a7060;margin-top:12px}
+.model-answer{background:#f2ede0;border-radius:10px;padding:16px;margin-top:10px;border:1px solid #ddd8c8;display:none}
+.model-answer.show{display:block}
+.model-answer p{font-size:13px;line-height:1.9;margin-bottom:12px}
+.cue-card{background:linear-gradient(135deg,#0f0e0c,#3a4a5c);border-radius:14px;padding:24px;color:#faf8f3;margin-bottom:16px}
+.cue-card .cue-label{font-family:'DM Sans',sans-serif;font-weight:700;font-size:11px;opacity:.6;letter-spacing:.12em;margin-bottom:14px}
+.cue-card .cue-text{font-family:'Lora',serif;font-size:15px;line-height:1.9;white-space:pre-line}
+.timer-wrap{display:inline-flex;align-items:center;gap:10px;margin-top:14px}
+.timer-circle{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;position:relative}
+.timer-inner{position:absolute;width:38px;height:38px;border-radius:50%;background:#0f0e0c;display:flex;align-items:center;justify-content:center}
+.timer-btn{padding:8px 16px;border-radius:8px;border:none;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700}
+.part-question{background:#f2ede0;border-radius:10px;padding:14px 16px;margin-bottom:10px;font-size:14px;line-height:1.7;border:1px solid #ddd8c8}
+.home-header{background:#fff;border-bottom:1px solid #ddd8c8;padding:18px 40px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.home-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700}
+.home-sub{font-family:'DM Sans',sans-serif;font-size:11px;color:#7a7060;letter-spacing:.1em}
+.hero{padding:60px 40px 40px;max-width:900px;margin:0 auto}
+.hero h1{font-family:'Playfair Display',serif;font-size:46px;font-weight:700;line-height:1.15;margin:12px 0 16px}
+.hero p{font-size:17px;color:#7a7060;line-height:1.8;max-width:540px;margin-bottom:40px}
+.skill-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:48px}
+.skill-card{border:1px solid #ddd8c8;border-radius:12px;padding:16px;background:#fff}
+.skill-icon{font-size:24px;margin-bottom:8px}
+.skill-name{font-family:'DM Sans',sans-serif;font-weight:700;font-size:14px;color:#0f0e0c;margin-bottom:6px}
+.skill-desc{font-family:'Lora',serif;font-size:12px;color:#7a7060;line-height:1.6}
+.test-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.test-card{border:1px solid #ddd8c8;border-radius:14px;padding:26px 22px;background:#fff;cursor:pointer;transition:transform .2s,box-shadow .2s;position:relative;overflow:hidden}
+.test-card:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.08)}
+.test-card .bar{position:absolute;top:0;left:0;right:0;height:4px}
+.test-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:#7a7060;letter-spacing:.1em;margin-bottom:8px}
+.test-name{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;margin-bottom:4px}
+.test-sub{font-family:'DM Sans',sans-serif;font-size:13px;color:#7a7060;margin-bottom:18px}
+.test-icons{display:flex;gap:6px;margin-bottom:18px}
+.test-icons span{background:#f2ede0;border-radius:6px;padding:4px 8px;font-size:14px}
+.test-cta{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700}
+.test-header{background:#fff;border-bottom:1px solid #ddd8c8;padding:12px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.back-btn{background:none;border:none;font-family:'DM Sans',sans-serif;font-size:13px;color:#7a7060;padding:4px 0}
+.progress-tabs{display:flex;gap:6px}
+.prog-tab{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;border:1px solid #ddd8c8;background:#f2ede0;color:#7a7060}
+.prog-tab.active{background:#0f0e0c;color:#faf8f3;border-color:#0f0e0c}
+.prog-tab.done{background:#5a7a5e22;border-color:#5a7a5e88;color:#5a7a5e}
+.test-content{max-width:900px;margin:0 auto;padding:32px 32px 80px}
+.section-heading{margin-bottom:28px}
+.section-eyebrow{font-family:'DM Sans',sans-serif;font-size:11px;color:#7a7060;letter-spacing:.12em;margin-bottom:6px}
+.section-title{font-family:'Playfair Display',serif;font-size:30px;font-weight:700;margin-bottom:4px}
+.section-meta{font-family:'DM Sans',sans-serif;font-size:13px;color:#7a7060}
+.results-wrap{max-width:680px;margin:0 auto;padding:80px 32px;text-align:center}
+.task-tabs{display:flex;gap:4px;margin-bottom:22px}
+.task-tab{flex:1;padding:11px;border-radius:10px;border:1px solid #ddd8c8;background:#f2ede0;color:#7a7060;font-family:'DM Sans',sans-serif;font-weight:700;font-size:13px}
+.task-tab.active{background:#0f0e0c;color:#faf8f3;border-color:#0f0e0c}
+.part-tabs{display:flex;gap:4px;margin-bottom:22px}
+.part-tab{flex:1;padding:9px;border-radius:10px;border:1px solid #ddd8c8;background:#f2ede0;color:#7a7060;font-family:'DM Sans',sans-serif;font-weight:700;font-size:12px}
+.part-tab.active{background:#0f0e0c;color:#faf8f3;border-color:#0f0e0c}
+.hidden{display:none}
+.loading{text-align:center;padding:28px;font-family:'DM Sans',sans-serif;color:#7a7060;font-size:14px}
+.loading::after{content:'';display:inline-block;width:16px;height:16px;border:2px solid #ddd8c8;border-top-color:#c9a84c;border-radius:50%;animation:spin .7s linear infinite;margin-left:8px;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:700px){
+  .two-col{grid-template-columns:1fr}
+  .skill-grid{grid-template-columns:1fr 1fr}
+  .test-grid{grid-template-columns:1fr}
+  .hero{padding:32px 20px 24px}
+  .hero h1{font-size:32px}
+  .home-header{padding:14px 20px}
+  .test-content{padding:20px 16px 60px}
+  .test-header{padding:10px 16px;flex-wrap:wrap;gap:8px}
+  .progress-tabs{flex-wrap:wrap}
+  .band-grid{grid-template-columns:repeat(3,1fr)}
+}
+</style>
 </head>
 <body>
-  <div id="root"></div>
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <script type="text/babel" src="app.jsx"></script>
+
+<!-- ═══ HOME SCREEN ═══ -->
+<div id="screen-home" class="screen active">
+  <div class="home-header">
+    <div>
+      <div class="home-title">IELTS Academic</div>
+      <div class="home-sub">PRACTICE PLATFORM</div>
+    </div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      <span class="tag">Band 7.5+</span>
+      <span class="tag">4 Skills</span>
+      <span class="tag">AI Feedback</span>
+    </div>
+  </div>
+  <div class="hero">
+    <div style="font-family:'DM Sans',sans-serif;font-size:12px;color:#c9a84c;font-weight:700;letter-spacing:.15em">3 FULL MOCK TESTS</div>
+    <h1>Train like it's<br><em style="color:#c9a84c">exam day.</em></h1>
+    <p>Full IELTS Academic mock tests with all four skills, strategy tips per question type, instant scoring, and AI-powered writing feedback scored against the official band descriptors.</p>
+    <div class="skill-grid">
+      <div class="skill-card" style="border-top:3px solid #3a4a5c">
+        <div class="skill-icon">🎧</div>
+        <div class="skill-name">Listening</div>
+        <div class="skill-desc">Multiple choice with transcript and answer explanations</div>
+      </div>
+      <div class="skill-card" style="border-top:3px solid #c9a84c">
+        <div class="skill-icon">📖</div>
+        <div class="skill-name">Reading</div>
+        <div class="skill-desc">True / False / Not Given with passage and logic analysis</div>
+      </div>
+      <div class="skill-card" style="border-top:3px solid #b85c38">
+        <div class="skill-icon">✍️</div>
+        <div class="skill-name">Writing</div>
+        <div class="skill-desc">Task 1 & 2 with Claude AI examiner feedback on all four criteria</div>
+      </div>
+      <div class="skill-card" style="border-top:3px solid #5a7a5e">
+        <div class="skill-icon">🗣️</div>
+        <div class="skill-name">Speaking</div>
+        <div class="skill-desc">All 3 parts with cue cards, prep timers, and examiner tips</div>
+      </div>
+    </div>
+    <div class="label" style="margin-bottom:14px">SELECT A MOCK TEST</div>
+    <div class="test-grid">
+      <div class="test-card" onclick="startTest(0)">
+        <div class="bar" style="background:#5a7a5e"></div>
+        <div class="test-num">TEST 1</div>
+        <div class="test-name">Mock Test 1</div>
+        <div class="test-sub">Foundation Level</div>
+        <div class="test-icons"><span>🎧</span><span>📖</span><span>✍️</span><span>🗣️</span></div>
+        <div class="test-cta" style="color:#5a7a5e">Begin Test →</div>
+      </div>
+      <div class="test-card" onclick="startTest(1)">
+        <div class="bar" style="background:#3a4a5c"></div>
+        <div class="test-num">TEST 2</div>
+        <div class="test-name">Mock Test 2</div>
+        <div class="test-sub">Development Level</div>
+        <div class="test-icons"><span>🎧</span><span>📖</span><span>✍️</span><span>🗣️</span></div>
+        <div class="test-cta" style="color:#3a4a5c">Begin Test →</div>
+      </div>
+      <div class="test-card" onclick="startTest(2)">
+        <div class="bar" style="background:#b85c38"></div>
+        <div class="test-num">TEST 3</div>
+        <div class="test-name">Mock Test 3</div>
+        <div class="test-sub">Exam Simulation</div>
+        <div class="test-icons"><span>🎧</span><span>📖</span><span>✍️</span><span>🗣️</span></div>
+        <div class="test-cta" style="color:#b85c38">Begin Test →</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TEST SCREEN ═══ -->
+<div id="screen-test" class="screen">
+  <div class="test-header">
+    <button class="back-btn" onclick="goHome()">← Back</button>
+    <div id="test-title-bar" style="font-family:'Playfair Display',serif;font-size:16px"></div>
+    <div class="progress-tabs" id="progress-tabs"></div>
+  </div>
+  <div class="test-content">
+    <div class="section-heading">
+      <div class="section-eyebrow" id="section-eyebrow"></div>
+      <div class="section-title" id="section-title"></div>
+      <div class="section-meta" id="section-meta"></div>
+    </div>
+    <div id="section-body"></div>
+  </div>
+</div>
+
+<!-- ═══ RESULTS SCREEN ═══ -->
+<div id="screen-results" class="screen">
+  <div class="results-wrap">
+    <div style="font-size:56px;margin-bottom:20px">🎓</div>
+    <h1 style="font-family:'Playfair Display',serif;font-size:38px;margin-bottom:12px">Mock Test Complete</h1>
+    <p style="font-size:16px;color:#7a7060;line-height:1.8;margin-bottom:40px" id="results-msg"></p>
+    <div style="background:#f2ede0;border:1px solid #ddd8c8;border-radius:16px;padding:26px 30px;margin-bottom:28px;text-align:left">
+      <div class="label" style="margin-bottom:14px">WHAT TO DO NOW</div>
+      <div id="next-steps"></div>
+    </div>
+    <div style="display:flex;gap:12px">
+      <button onclick="goHome()" style="flex:1;padding:15px;border-radius:12px;border:none;background:#0f0e0c;color:#faf8f3;font-family:'DM Sans',sans-serif;font-weight:700;font-size:15px">Choose Another Test</button>
+      <button id="retake-btn" style="flex:1;padding:15px;border-radius:12px;border:1.5px solid #0f0e0c;background:transparent;color:#0f0e0c;font-family:'DM Sans',sans-serif;font-weight:700;font-size:15px">Retake This Test</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════
+const TESTS = [
+{
+  title:"Mock Test 1", subtitle:"Foundation Level", theme:"#5a7a5e",
+  sections:{
+    listening:{
+      tip:"Read the questions BEFORE the audio plays. You will hear each recording only once. Write answers as you listen — do not wait until the end.",
+      duration:30,
+      transcript:"[Section 1 — A conversation between two students about a university library]\n\nStudent A: Hi, I'm trying to find out about borrowing books. How many can I take out at once?\nStudent B: It depends on your status. Undergraduates can borrow up to ten books, but postgraduates are allowed fifteen.\nStudent A: And how long can I keep them?\nStudent B: Standard loans are three weeks, but you can renew twice online unless someone else has reserved the book.\nStudent A: What if I return them late?\nStudent B: There's a fine of 20 pence per day per book. It adds up quickly if you forget.",
+      questions:[
+        {q:"How many books can a postgraduate student borrow at one time?",opts:["A. Ten","B. Twelve","C. Fifteen","D. Twenty"],ans:"C",exp:"The transcript states postgraduates are allowed fifteen books. This tests your ability to distinguish between two numbers mentioned close together — 'ten' (undergraduates) is a deliberate distractor."},
+        {q:"What is the daily fine for returning a book late?",opts:["A. 10 pence","B. 15 pence","C. 20 pence","D. 25 pence"],ans:"C",exp:"'20 pence per day per book' — stated clearly. Numbers are frequently tested in Section 1; write them down immediately as you hear them."},
+        {q:"How many times can a student renew a book online?",opts:["A. Once","B. Twice","C. Three times","D. Unlimited"],ans:"B",exp:"'You can renew twice online' — straightforward retrieval. This is why reading questions before the audio is essential: you know exactly what to listen for."}
+      ]
+    },
+    reading:{
+      tip:"Do NOT read the whole passage first. Read the questions, identify keywords, then skim the passage to locate the relevant paragraph. TFNG questions follow the order of the passage.",
+      duration:60,
+      passage:`The Psychology of Procrastination
+
+For decades, procrastination was dismissed as a simple failure of willpower — a character flaw in those who could not organise themselves effectively. Recent psychological research, however, has fundamentally reframed this understanding. Far from being a time-management problem, procrastination is now recognised as primarily an emotion-regulation problem, in which individuals avoid tasks not because they are lazy, but because those tasks generate negative emotions such as anxiety, self-doubt, or boredom.
+
+Dr Fuschia Sirois of Durham University argues that procrastination functions as a short-term mood repair strategy. When faced with a task perceived as threatening or unpleasant, the brain seeks immediate emotional relief by directing attention elsewhere. The relief is genuine and immediate; the cost — a worsening of both the original task situation and long-term wellbeing — is delayed and therefore less psychologically salient. This mechanism is reinforced over time, making procrastination an increasingly automatic response.
+
+Contrary to popular belief, procrastination is not associated with low intelligence or poor academic ability. Studies consistently show that highly capable individuals are equally susceptible, and in some cases more so, as they may have higher performance standards that make tasks feel more threatening. Perfectionism, in particular, has a well-documented relationship with procrastination: the fear of producing imperfect work can be paralysing enough to prevent any work from beginning at all.
+
+Interventions that treat procrastination as a scheduling problem — such as detailed to-do lists or time-blocking — show limited effectiveness when the root emotional triggers are not addressed. More successful approaches include self-compassion training, which reduces the harsh self-criticism that often follows an episode of procrastination and thereby weakens its self-reinforcing cycle; and implementation intentions, in which individuals specify not just what they will do but exactly when, where, and how, reducing the cognitive load of initiating the task.
+
+Researchers note that procrastination has worsened significantly in populations with access to smartphones and social media platforms, which provide an unprecedented density of immediately rewarding alternative activities. This has led some psychologists to suggest that procrastination, while always a feature of human psychology, has become structurally amplified by the modern attention economy in ways that individual willpower alone cannot counteract.`,
+      questions:[
+        {s:"Procrastination has traditionally been viewed as a problem with how people manage their time.",ans:"TRUE",exp:"The passage says procrastination 'was dismissed as a simple failure of willpower' and is 'now recognised as primarily an emotion-regulation problem' — implying it was previously seen as a self-discipline or time-management issue."},
+        {s:"The emotional relief that procrastination provides is experienced after the avoided task has been completed.",ans:"FALSE",exp:"The passage explicitly states the relief is 'immediate' — it comes from avoiding the task, not completing it. This is a direction-reversal trap."},
+        {s:"Students with high academic ability are completely immune to procrastination.",ans:"FALSE",exp:"The passage says highly capable individuals are 'equally susceptible, and in some cases more so.' 'Completely immune' directly contradicts this."},
+        {s:"Perfectionism can cause individuals to delay starting work due to fear of failure.",ans:"TRUE",exp:"'The fear of producing imperfect work can be paralysing enough to prevent any work from beginning at all.' The statement accurately paraphrases this."},
+        {s:"Self-compassion training has been proven to eliminate procrastination entirely in clinical trials.",ans:"NOT GIVEN",exp:"The passage mentions self-compassion training as a 'more successful approach' but gives no specific trial data or claim of complete elimination. 'Proven to eliminate entirely' goes far beyond what the passage states."},
+        {s:"The rise of social media has made procrastination more difficult to overcome through personal effort alone.",ans:"TRUE",exp:"The passage states smartphones provide 'unprecedented density of immediately rewarding alternatives' and that 'individual willpower alone cannot counteract' this. The statement is a close paraphrase."}
+      ]
+    },
+    writing:{
+      tip:"Spend exactly 20 minutes on Task 1 (minimum 150 words) and 40 minutes on Task 2 (minimum 250 words). Always write an overview in Task 1 — it is the single most important feature examiners look for.",
+      duration:60,
+      task1:{
+        prompt:"The bar chart below shows the percentage of adults in four countries (UK, USA, Australia, Canada) who used online banking in 2010, 2015, and 2020.",
+        chart:"[Bar chart: UK: 35%, 52%, 71% | USA: 28%, 45%, 63% | Australia: 31%, 49%, 68% | Canada: 33%, 51%, 70% across 2010, 2015, 2020]",
+        instructions:"Summarise the information by selecting and reporting the main features, and make comparisons where relevant. Write at least 150 words.",
+        model:"The bar chart illustrates the proportion of adults who used online banking across four English-speaking nations between 2010 and 2020.\n\nOverall, online banking usage increased substantially in all four countries over the decade, with the UK recording the highest adoption rate by 2020 and the USA consistently showing the lowest figures throughout the period.\n\nIn 2010, usage rates were relatively similar across the four nations, ranging from 28% in the USA to 35% in the UK. By 2015, all countries had seen increases of approximately 15–20 percentage points, with the UK (52%) and Canada (51%) slightly ahead of Australia (49%) and the USA (45%).\n\nThe most striking growth occurred between 2015 and 2020. The UK reached 71%, followed closely by Canada at 70% and Australia at 68%. The USA, while showing consistent growth, remained the lowest at 63% in 2020 — still more than double its 2010 figure."
+      },
+      task2:{
+        prompt:"Some people believe that the primary purpose of education is to prepare students for employment. Others argue that education should have broader aims, such as developing critical thinking and personal values. Discuss both views and give your own opinion.",
+        instructions:"Write at least 250 words. You should spend about 40 minutes on this task.",
+        model:"Education serves multiple functions in society, and the question of whether it should primarily prepare students for the workforce or pursue broader developmental goals has generated considerable debate. While vocational preparation is undeniably important, I would argue that reducing education to employment readiness fundamentally diminishes its value.\n\nProponents of employment-focused education argue that schools and universities exist to equip students with practical, marketable skills. In an increasingly competitive global economy, graduates who lack technical competencies and professional preparation face significant disadvantage. Furthermore, education funded by public resources arguably carries an obligation to generate economic returns through a productive workforce. Countries with strong vocational training systems, such as Germany, demonstrate that targeted education can produce both individual prosperity and economic growth.\n\nHowever, an exclusively employment-oriented system risks producing individuals who are professionally capable but intellectually and morally underdeveloped. Critical thinking — the ability to question assumptions, evaluate evidence, and reason independently — is not merely an academic luxury; it underpins informed citizenship and democratic participation. Similarly, education that cultivates empathy, ethical reasoning, and cultural understanding produces individuals better equipped to navigate complex social realities. These qualities are also increasingly valued by employers themselves, suggesting that broader educational aims and vocational outcomes are not as opposed as they might initially appear.\n\nIn my view, education at its best achieves both simultaneously. A history lesson can develop analytical skills while building cultural literacy; a science class can teach rigorous methodology alongside environmental responsibility. The dichotomy between employment preparation and broader development is largely false — the deepest preparation for professional life includes precisely those human capacities that a narrowly vocational curriculum would neglect."
+      }
+    },
+    speaking:{
+      tip:"Never give one-sentence answers in Parts 1 and 3. The examiner is scoring your ability to extend and develop ideas. Aim for 3–5 sentences per answer, using specific examples and personal reflection.",
+      duration:15,
+      parts:[
+        {part:1,title:"Introduction & Interview (4–5 min)",questions:["Do you enjoy reading? Why or why not?","How has technology changed the way people read in your country?","Do you prefer reading physical books or digital texts?"],tips:"Keep answers to 3–5 sentences. Use a mix of present habits and personal opinion. Avoid starting every sentence with 'I think...'"},
+        {part:2,title:"Individual Long Turn (3–4 min)",cue:"Describe a time when you learned something new that changed the way you think about a topic.\n\nYou should say:\n• what you learned\n• how you learned it\n• why it changed your thinking\n• and explain how this new understanding has affected you since.",tips:"Use your 1-minute preparation to jot 4–5 keywords — one per bullet point. Open with a strong scene-setting sentence. Do not memorise a script; speak from notes."},
+        {part:3,title:"Two-Way Discussion (4–5 min)",questions:["In your opinion, why do some people resist changing their views even when presented with new information?","How important is it for schools to teach students to question what they read or hear?","Do you think the internet has made it easier or harder for people to form accurate beliefs about the world?"],tips:"Part 3 is a discussion, not an interview. Give extended, nuanced answers with reasons and examples. Use hedging language: 'It could be argued that...', 'One perspective suggests...'"}
+      ]
+    }
+  }
+},
+{
+  title:"Mock Test 2", subtitle:"Development Level", theme:"#3a4a5c",
+  sections:{
+    listening:{
+      tip:"Watch for distractor answers — the speaker often mentions the wrong answer first, then corrects it. The FINAL answer given is almost always the correct one.",
+      duration:30,
+      transcript:"[Section 2 — A tour guide speaking to visitors at a nature reserve]\n\nGuide: Welcome to Greenfield Nature Reserve. The reserve covers approximately 340 hectares — that's about 850 acres for those more familiar with imperial measurements. We have three main walking trails. The Blue Trail is the shortest at 2.5 kilometres and takes about 45 minutes at a leisurely pace. The Red Trail covers 5 kilometres — allow around 90 minutes. Our most challenging route, the Gold Trail, is 8 kilometres and most visitors need between two and a half and three hours. Photography is permitted throughout the reserve, but we ask that visitors stay on marked paths at all times to protect nesting areas.",
+      questions:[
+        {q:"How long does the Red Trail take to complete?",opts:["A. 45 minutes","B. 60 minutes","C. 90 minutes","D. 120 minutes"],ans:"C",exp:"The guide states the Red Trail takes 'around 90 minutes.' Three trails with different times are mentioned in quick succession — you must track which time belongs to which trail."},
+        {q:"What does the guide say visitors must do throughout the reserve?",opts:["A. Stay silent near wildlife","B. Stay on marked paths","C. Carry a map at all times","D. Register at the entrance"],ans:"B",exp:"'We ask that visitors stay on marked paths at all times' — stated clearly near the end. This tests whether you are still listening after the main numerical information has passed."},
+        {q:"What is the size of the reserve in hectares?",opts:["A. 240","B. 300","C. 340","D. 850"],ans:"C",exp:"340 hectares — note that 850 is the acreage figure, a deliberate distractor. The question specifies 'hectares,' so you must track units, not just numbers."}
+      ]
+    },
+    reading:{
+      tip:"For Matching Headings questions, identify the main idea of each paragraph in one word or phrase before looking at the heading list. This prevents the headings from biasing your reading.",
+      duration:60,
+      passage:`Urban Farming: Growing Cities from the Inside Out
+
+In cities across the world, a quiet agricultural revolution is underway. Rooftops, abandoned lots, repurposed warehouses, and even underground car parks are being transformed into productive growing spaces — not as novelties, but as serious attempts to reimagine how urban populations feed themselves. Urban farming, once dismissed as a hobbyist pursuit, is attracting substantial investment from city governments, technology companies, and venture capital alike.
+
+The appeal is not difficult to understand. Conventional agriculture requires vast land areas, consumes enormous quantities of water, and generates significant carbon emissions through transportation — particularly for fresh produce that travels thousands of kilometres from farm to table. Urban farms, by contrast, can be positioned within metres of their consumers, dramatically reducing the logistical chain. Vertical farms, which stack growing layers in climate-controlled environments, can produce yields per square metre far exceeding those of traditional fields, using up to 95% less water through hydroponic or aeroponic systems.
+
+However, enthusiasm for urban farming must be tempered by economic realism. The energy costs of artificial lighting — essential for indoor vertical farms — are substantial, and in regions where electricity generation relies heavily on fossil fuels, the carbon footprint of indoor farming may rival or exceed that of conventional agriculture. A kilogram of tomatoes grown under LED lights in Manchester may, depending on the energy source, carry a higher emissions cost than the same kilogram transported from a Spanish greenhouse.
+
+Social dimensions also complicate the picture. Urban farming projects in lower-income city districts have sometimes been associated with gentrification — rising property values that displace the very communities the farms were intended to serve. Conversely, community garden projects with active resident involvement have demonstrated measurable benefits for mental health, social cohesion, and food literacy in urban populations.
+
+The technology sector's interest in urban farming centres largely on precision agriculture — the use of sensors, artificial intelligence, and automated systems to monitor and optimise every variable in the growing environment. Advocates argue that data-driven farming will eventually make urban food production economically competitive with conventional agriculture. Sceptics counter that the capital cost of these systems remains prohibitive, and that the promised economies of scale have yet to materialise outside carefully controlled pilot projects.`,
+      questions:[
+        {s:"Urban farming is now being taken seriously as a commercial and governmental enterprise.",ans:"TRUE",exp:"The passage states urban farming is 'attracting substantial investment from city governments, technology companies, and venture capital' — confirming it is no longer seen as a mere hobby."},
+        {s:"Vertical farms always have a lower carbon footprint than conventional farms.",ans:"FALSE",exp:"The passage explicitly states that in regions relying on fossil fuels, indoor farming 'may rival or exceed' the emissions of conventional agriculture. 'Always lower' directly contradicts this conditional statement."},
+        {s:"Urban farming projects have had uniformly negative social effects on low-income communities.",ans:"FALSE",exp:"The passage describes both negative effects (gentrification) AND positive effects (mental health, social cohesion). 'Uniformly negative' ignores the positive cases explicitly mentioned."},
+        {s:"AI and sensor technology are being used to improve growing conditions in urban farms.",ans:"TRUE",exp:"Directly stated: 'the use of sensors, artificial intelligence, and automated systems to monitor and optimise every variable in the growing environment.'"},
+        {s:"Precision agriculture technology has already made urban farming cheaper than conventional farming globally.",ans:"FALSE",exp:"Sceptics in the passage state 'the capital cost of these systems remains prohibitive' and 'promised economies of scale have yet to materialise.' The statement claims success that the passage directly contradicts."},
+        {s:"The passage provides statistics on the exact amount of water saved by hydroponic systems.",ans:"TRUE",exp:"The passage states hydroponic or aeroponic systems use 'up to 95% less water' — a specific statistic is given."}
+      ]
+    },
+    writing:{
+      tip:"In Task 2, your position must be clear in the introduction and consistently maintained throughout. Examiners deduct marks for contradicting yourself between paragraphs.",
+      duration:60,
+      task1:{
+        prompt:"The line graph below shows the average monthly temperature (°C) in three cities — Cairo, London, and Toronto — over the course of one year.",
+        chart:"[Line graph: Cairo stays high (20–36°C), peaking July/August. London shows moderate variation (5–22°C). Toronto has widest range (-5 to 26°C), dipping sharply in winter.]",
+        instructions:"Summarise the information by selecting and reporting the main features, and make comparisons where relevant. Write at least 150 words.",
+        model:"The line graph compares average monthly temperatures across three cities — Cairo, London, and Toronto — throughout a single year.\n\nOverall, Cairo maintained the highest temperatures year-round, while Toronto experienced the greatest seasonal variation, with temperatures ranging from below freezing in winter to warm summer levels.\n\nCairo's temperatures remained consistently high, beginning at around 20°C in January, rising sharply to a peak of approximately 36°C in July and August, before declining to roughly 22°C by December. London showed a more moderate pattern, with temperatures ranging from approximately 5°C in the coldest months to around 22°C in summer.\n\nToronto displayed the most dramatic fluctuation. Temperatures fell to approximately -5°C between December and February — well below both other cities — then climbed steeply to reach around 26°C in July. This gives Toronto a seasonal range of roughly 31 degrees, compared to approximately 16 degrees for Cairo and 17 degrees for London."
+      },
+      task2:{
+        prompt:"In many countries, young people are choosing to live alone rather than with their families or partners. What are the advantages and disadvantages of this trend?",
+        instructions:"Write at least 250 words. You should spend about 40 minutes on this task.",
+        model:"The increasing tendency among young adults to live independently — rather than with family or romantic partners — reflects broader social and economic shifts. While this trend carries genuine benefits, it also presents significant personal and societal challenges.\n\nThe most evident advantage of living alone is autonomy. Individuals who live independently gain complete control over their daily routines, social lives, and domestic environments, which can foster self-reliance and personal development. Research suggests that the experience of managing a household alone builds practical competencies — budgeting, cooking, and problem-solving — that contribute to long-term resilience. Furthermore, for young professionals in competitive urban environments, solo living removes the friction of negotiating shared space, potentially enhancing productivity and mental clarity.\n\nHowever, the disadvantages are considerable. Social isolation represents the most serious risk: without regular cohabitation, individuals may experience loneliness, particularly in cities where community ties are weak. Psychologists have linked chronic loneliness to adverse health outcomes comparable to smoking in terms of mortality risk. Economically, solo living is inherently inefficient — housing, utilities, and food costs are not shared, placing disproportionate financial pressure on individuals, particularly in high-cost cities.\n\nOn balance, living alone can be a valuable phase of personal development when chosen freely and sustained by adequate social connections. The risks arise primarily when it becomes an involuntary consequence of weakened community structures or economic precarity rather than a genuine expression of individual preference."
+      }
+    },
+    speaking:{
+      tip:"Avoid repetition of vocabulary within a single answer — IELTS Speaking scores Lexical Resource, and examiners specifically note when candidates recycle the same words. Use synonyms naturally.",
+      duration:15,
+      parts:[
+        {part:1,title:"Introduction & Interview (4–5 min)",questions:["What kind of music do you enjoy listening to?","Has your taste in music changed since you were younger?","Do you think music education should be compulsory in schools?"],tips:"Answer naturally but extend each response. For yes/no questions, always follow with 'because' or 'for example' to demonstrate language range."},
+        {part:2,title:"Individual Long Turn (3–4 min)",cue:"Describe a person who has had a significant positive influence on your life.\n\nYou should say:\n• who this person is\n• how you know them\n• what qualities or actions made them influential\n• and explain how they have shaped who you are today.",tips:"Use a range of tenses: present perfect for lasting influence, past simple for specific events, present simple for enduring qualities. This naturally demonstrates Grammatical Range."},
+        {part:3,title:"Two-Way Discussion (4–5 min)",questions:["Do you think role models are more or less important today than they were in previous generations?","How much are people's personalities shaped by their upbringing versus their own choices?","Should public figures be held to higher ethical standards than ordinary people?"],tips:"These are abstract, societal questions. Use phrases like 'From a sociological perspective...' or 'One could argue that...' to signal academic register."}
+      ]
+    }
+  }
+},
+{
+  title:"Mock Test 3", subtitle:"Exam Simulation", theme:"#b85c38",
+  sections:{
+    listening:{
+      tip:"Spelling matters in Listening — incorrect spelling costs you the mark even if you identified the correct answer. Double-check names, places, and technical terms.",
+      duration:30,
+      transcript:"[Section 3 — Two students, Maya and Tom, discuss their research project with a tutor]\n\nTutor: So how are you both getting on with the research design?\nMaya: We've decided to focus on online consumer behaviour rather than in-store — there's just much more data available and it's easier to quantify.\nTom: I was initially pushing for a mixed-methods approach, but Maya convinced me that a purely quantitative study would give us cleaner results for the time we have.\nTutor: That's a reasonable decision given your timeline. Have you settled on your data collection method?\nMaya: We're planning to use an online survey. We originally thought about interviews, but the sample size would have been too small.\nTutor: Good. What's your target sample size?\nTom: We're aiming for 200 responses, though our supervisor suggested 150 would be the minimum acceptable.",
+      questions:[
+        {q:"Why did the students decide to use a quantitative rather than mixed-methods approach?",opts:["A. Their tutor recommended it","B. It suited their timeline better","C. Mixed methods are less reliable","D. Their supervisor required it"],ans:"B",exp:"Tom says a purely quantitative study would give 'cleaner results for the time we have' — the time constraint (timeline) was the deciding factor. Option A is a distractor: the tutor only commented after the decision was already made."},
+        {q:"What is the minimum acceptable sample size according to the supervisor?",opts:["A. 100","B. 150","C. 175","D. 200"],ans:"B",exp:"Tom states '150 would be the minimum acceptable' — while 200 is their target, the question asks for the minimum. Reading questions precisely before listening prevents this kind of error."},
+        {q:"Why did the students reject interviews as a data collection method?",opts:["A. Interviews are too time-consuming","B. They lack interview training","C. The sample size would be too small","D. Their topic is unsuitable for interviews"],ans:"C",exp:"Maya explicitly says 'the sample size would have been too small' — the method itself was not the issue, but the resulting limitation on sample size."}
+      ]
+    },
+    reading:{
+      tip:"If you are unsure between FALSE and NOT GIVEN, ask: 'Does the passage say the opposite?' If yes → FALSE. If the passage simply doesn't address the specific claim → NOT GIVEN.",
+      duration:60,
+      passage:`Solitude and the Creative Mind
+
+The relationship between solitude and creative output has fascinated psychologists and biographers for centuries. Across disciplines — from literature to mathematics to visual art — an unusual number of the most celebrated practitioners have described periods of profound isolation as central to their most significant work. Yet the romanticisation of the lone genius working in solitude has increasingly been challenged by research into collaborative creativity and the social dimensions of innovation.
+
+Historical accounts suggest that solitude serves at least two distinct functions in creative work. The first is generative: uninterrupted time allows for the deep, sustained attention that complex problem-solving and original synthesis require. Cognitive psychologists refer to this as the default mode network — a set of brain regions most active when the mind is not engaged with external stimuli, associated with imagination, self-referential thought, and the retrieval of remote associations. Solitude, in this framework, is not merely the absence of distraction but the presence of a particular kind of cognitive activity.
+
+The second function is evaluative. Creative individuals frequently report that physical separation from collaborators and critics allows them to assess their own work more objectively, without the distorting influence of social approval or peer pressure. The ability to sit with uncertainty — to resist the urge to share, validate, or refine prematurely — appears to be a distinguishing characteristic of highly creative individuals across fields.
+
+These findings do not imply that collaboration is valueless. Research into scientific innovation consistently demonstrates that groundbreaking work often emerges at the intersection of disciplinary perspectives — at conferences, in correspondence, through mentorship relationships. The apparent contradiction dissolves when solitude and collaboration are understood not as opposites but as complementary phases: deep individual reflection followed by selective, purposeful engagement with others.
+
+It would be a misreading, however, to prescribe solitude as a universal creative enhancer. Introverts and extroverts differ significantly in the degree to which they find isolation energising or depleting, and cultural context shapes whether solitary practice is experienced as freedom or punishment. What the evidence does support is that the capacity to tolerate and productively use periods of aloneness — whatever their optimal length for a given individual — is a learnable skill that appears consistently in the developmental histories of highly creative people.`,
+      questions:[
+        {s:"A significant number of highly creative people across different fields have linked solitude to their best work.",ans:"TRUE",exp:"'An unusual number of the most celebrated practitioners have described periods of profound isolation as central to their most significant work' — 'unusual number' maps to 'significant number.'"},
+        {s:"The default mode network is most active when a person is focused on an external task.",ans:"FALSE",exp:"The passage defines the default mode network as 'most active when the mind is not engaged with external stimuli' — the opposite of what the statement claims."},
+        {s:"Creative individuals find it easy to resist sharing their work before it is fully developed.",ans:"FALSE",exp:"The passage describes this ability as a 'distinguishing characteristic' — implying it is notable and relatively rare, not easy or universal."},
+        {s:"The passage argues that collaboration produces more innovative results than solitary work.",ans:"NOT GIVEN",exp:"The passage presents solitude and collaboration as 'complementary phases' — it takes no position on which produces more innovation. The comparative ranking is not made."},
+        {s:"Introverts benefit more from solitude in creative work than extroverts do.",ans:"NOT GIVEN",exp:"The passage notes introverts and extroverts 'differ significantly' in how they experience isolation, but does not state that introverts benefit more creatively — only that they differ in experience."},
+        {s:"The ability to use solitude productively can be developed over time.",ans:"TRUE",exp:"'The capacity to tolerate and productively use periods of aloneness... is a learnable skill' — 'learnable' directly supports the idea that this ability can be developed."}
+      ]
+    },
+    writing:{
+      tip:"Examiners read your Task 2 essay in under 3 minutes. Your first paragraph must signal immediately that you have understood the question. A vague introduction makes every subsequent band harder to recover.",
+      duration:60,
+      task1:{
+        prompt:"The two maps below show the layout of a small town in 1990 and 2020.",
+        chart:"[Map 1 - 1990: Town centre with market, residential streets to the north, farmland to the east, single-lane road through the centre]\n[Map 2 - 2020: Market replaced by shopping centre, new housing estate to the east on former farmland, dual carriageway through centre, new car park in the south]",
+        instructions:"Summarise the information by selecting and reporting the main features, and make comparisons where relevant. Write at least 150 words.",
+        model:"The maps illustrate significant changes to a small town's layout between 1990 and 2020, reflecting patterns of urban expansion and modernisation.\n\nThe most striking transformation is in the town centre, where the original market has been replaced by a large shopping centre. The main road running through the centre has been widened from a single lane to a dual carriageway, and a new car park has been constructed to the south — developments that suggest a significant increase in vehicular traffic over the period.\n\nThe eastern edge of the town underwent considerable expansion. Farmland that existed in 1990 has been converted into a new housing estate by 2020, indicating residential growth that likely reflects an increase in the town's population. The northern residential streets appear to have remained largely unchanged during this period.\n\nOverall, the town has undergone substantial commercial and residential development, with the conversion of agricultural land and the modernisation of infrastructure representing the two most significant changes."
+      },
+      task2:{
+        prompt:"Governments should invest more in public transport rather than in building new roads. To what extent do you agree or disagree?",
+        instructions:"Write at least 250 words. You should spend about 40 minutes on this task.",
+        model:"The question of whether public investment should prioritise public transport over road construction reflects deeper tensions between individual mobility preferences and collective environmental and urban planning goals. I broadly agree that public transport warrants greater governmental emphasis, though a complete redirection of road investment would be simplistic and counterproductive in many contexts.\n\nThe case for prioritising public transport rests on several interconnected arguments. Environmentally, shifting commuters from private vehicles to trains, buses, and metro systems can substantially reduce urban carbon emissions and air pollution. High-quality public transport also offers equity benefits — it provides mobility to individuals who cannot afford or operate private vehicles, including the elderly, young people, and lower-income populations. Cities such as Singapore, Tokyo, and Vienna demonstrate that comprehensive, reliable public transport networks can transform urban mobility while reducing traffic congestion significantly.\n\nNevertheless, dismissing road investment entirely would be shortsighted. Rural and peri-urban populations, where public transport provision is inherently less economically viable, depend on road infrastructure for access to employment, healthcare, and essential services. Additionally, road networks carry freight that supports economic activity in ways that passenger rail systems cannot easily substitute.\n\nA more nuanced position would be that governments should redirect investment toward integrated transport systems — where enhanced public transport is complemented by smart road design that prioritises pedestrians, cyclists, and public vehicles — rather than framing the choice as binary. The goal is not to win an ideological argument about transport modes, but to design urban systems that are efficient, equitable, and sustainable."
+      }
+    },
+    speaking:{
+      tip:"In Part 3, do not say 'I agree' or 'I disagree' and stop. Give your position, a reason, an example, and acknowledge the counterargument. This structure produces the extended, coherent responses that score Band 7+.",
+      duration:15,
+      parts:[
+        {part:1,title:"Introduction & Interview (4–5 min)",questions:["What do you usually do to relax after a busy day?","Do you think people today have enough time to relax? Why or why not?","Has the way you relax changed compared to when you were a child?"],tips:"Speak at a natural pace — do not rush. Examiners are not impressed by speed; they are listening for clarity, range, and fluency."},
+        {part:2,title:"Individual Long Turn (3–4 min)",cue:"Describe a place in your country that you think every visitor should see.\n\nYou should say:\n• where the place is\n• what it looks like or what you can do there\n• why you think it is special\n• and explain why you would recommend it to visitors.",tips:"Use sensory language to make your description vivid: what you see, hear, feel. This demonstrates a wider range of vocabulary than purely factual description."},
+        {part:3,title:"Two-Way Discussion (4–5 min)",questions:["How has tourism changed your country in both positive and negative ways?","Do you think governments should limit the number of tourists visiting certain places?","Is it possible to develop a country's tourism industry while still protecting its cultural identity?"],tips:"Part 3 connects to Part 2's theme but moves to the abstract and societal. Show you can operate at both the specific (Part 2) and the general (Part 3) — this range impresses examiners."}
+      ]
+    }
+  }
+}
+];
+
+// ═══════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════
+let currentTest = 0;
+let currentSection = 0; // 0=listening 1=reading 2=writing 3=speaking
+let completedSections = [];
+const SECTION_KEYS = ['listening','reading','writing','speaking'];
+const SECTION_LABELS = ['Listening','Reading','Writing','Speaking'];
+const SECTION_ICONS = ['🎧','📖','✍️','🗣️'];
+
+// ═══════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function goHome(){ showScreen('home'); }
+
+function startTest(idx){
+  currentTest = idx;
+  currentSection = 0;
+  completedSections = [];
+  showScreen('test');
+  renderTestHeader();
+  renderSection();
+}
+
+function nextSection(){
+  completedSections.push(currentSection);
+  currentSection++;
+  if(currentSection >= 4){ showResults(); return; }
+  renderTestHeader();
+  renderSection();
+  window.scrollTo(0,0);
+}
+
+function showResults(){
+  const t = TESTS[currentTest];
+  document.getElementById('results-msg').textContent =
+    `You've completed all four sections of ${t.title}. Review your Writing feedback, note the strategy tips that surprised you, and attempt the next mock test when you feel ready.`;
+  const steps = [
+    "Review every wrong answer explanation — understand the logic, not just the correct answer",
+    "Re-read the strategy tip for any section where you felt uncertain",
+    "For Writing, compare your response to the model answer paragraph by paragraph",
+    "Wait 24–48 hours before attempting the next mock test — let the lessons consolidate"
+  ];
+  document.getElementById('next-steps').innerHTML = steps.map((s,i)=>`
+    <div style="display:flex;gap:12px;margin-bottom:12px;align-items:flex-start">
+      <span style="width:24px;height:24px;border-radius:50%;background:#c9a84c;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:#0f0e0c;flex-shrink:0">${i+1}</span>
+      <span style="font-family:'Lora',serif;font-size:14px;color:#0f0e0c;line-height:1.7">${s}</span>
+    </div>`).join('');
+  document.getElementById('retake-btn').onclick = ()=>startTest(currentTest);
+  showScreen('results');
+}
+
+// ═══════════════════════════════════════════════
+// HEADER
+// ═══════════════════════════════════════════════
+function renderTestHeader(){
+  const t = TESTS[currentTest];
+  document.getElementById('test-title-bar').textContent = t.title;
+  document.getElementById('progress-tabs').innerHTML = SECTION_KEYS.map((k,i)=>{
+    let cls = 'prog-tab';
+    if(i===currentSection) cls+=' active';
+    else if(completedSections.includes(i)) cls+=' done';
+    return `<div class="${cls}">${SECTION_ICONS[i]} ${SECTION_LABELS[i]}${completedSections.includes(i)?' ✓':''}</div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════
+// SECTION RENDERER
+// ═══════════════════════════════════════════════
+function renderSection(){
+  const t = TESTS[currentTest];
+  const key = SECTION_KEYS[currentSection];
+  const sec = t.sections[key];
+  document.getElementById('section-eyebrow').textContent = `SECTION ${currentSection+1} OF 4`;
+  document.getElementById('section-title').textContent = SECTION_ICONS[currentSection]+' '+SECTION_LABELS[currentSection];
+  document.getElementById('section-meta').textContent = `${sec.duration} minutes · ${t.subtitle}`;
+  const body = document.getElementById('section-body');
+  if(key==='listening') body.innerHTML = renderListening(sec);
+  else if(key==='reading') body.innerHTML = renderReading(sec);
+  else if(key==='writing') body.innerHTML = renderWriting(sec);
+  else if(key==='speaking') body.innerHTML = renderSpeaking(sec);
+  bindSection(key, sec);
+}
+
+// ═══════════════════════════════════════════════
+// LISTENING
+// ═══════════════════════════════════════════════
+function renderListening(sec){
+  return `
+  <div class="tip-box" style="background:#3a4a5c12;border:1px solid #3a4a5c30">
+    <div class="tip-icon">💡</div>
+    <div><div class="tip-label" style="color:#3a4a5c">STRATEGY TIP</div><div class="tip-text">${sec.tip}</div></div>
+  </div>
+  <div class="card" style="background:#f2ede0;margin-bottom:20px">
+    <div class="label">AUDIO TRANSCRIPT</div>
+    <div style="font-family:'Lora',serif;font-size:14px;line-height:1.8;font-style:italic;white-space:pre-line">${sec.transcript}</div>
+  </div>
+  ${sec.questions.map((q,i)=>`
+  <div class="card" id="lq-${i}">
+    <div style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:15px;margin-bottom:12px">${i+1}. ${q.q}</div>
+    ${q.opts.map(o=>`<button class="option-btn" data-li="${i}" data-opt="${o.charAt(0)}" onclick="selectListening(${i},'${o.charAt(0)}')">${o}</button>`).join('')}
+    <div class="explanation hidden" id="lexp-${i}"><strong>Explanation:</strong> ${q.exp}</div>
+  </div>`).join('')}
+  <button class="submit-btn" id="l-submit" onclick="submitListening()">Submit Answers & See Feedback</button>
+  <div id="l-score" class="hidden"></div>`;
+}
+
+function bindSection(key){ /* bindings done inline via onclick */ }
+
+function selectListening(qi, opt){
+  document.querySelectorAll(`[data-li="${qi}"]`).forEach(b=>{
+    b.classList.remove('selected');
+    if(b.dataset.opt===opt) b.classList.add('selected');
+  });
+}
+
+function submitListening(){
+  const sec = TESTS[currentTest].sections.listening;
+  let score = 0;
+  sec.questions.forEach((q,i)=>{
+    const sel = document.querySelector(`[data-li="${i}"].selected`);
+    const ans = sel ? sel.dataset.opt : null;
+    document.querySelectorAll(`[data-li="${i}"]`).forEach(b=>{
+      b.onclick = null;
+      if(b.dataset.opt === q.ans){ b.classList.add('correct'); b.classList.remove('selected'); }
+      else if(b.dataset.opt === ans && ans !== q.ans){ b.classList.add('wrong'); b.classList.remove('selected'); }
+    });
+    if(ans === q.ans) score++;
+    document.getElementById(`lexp-${i}`).classList.remove('hidden');
+  });
+  document.getElementById('l-submit').classList.add('hidden');
+  const colors = score===3?'#5a7a5e':score===2?'#c9a84c':'#b85c38';
+  const msgs = ['Keep practising — re-read the strategy tip','Good — review the explanations above','Excellent — full marks'];
+  document.getElementById('l-score').innerHTML = `
+    <div class="score-box"><div class="score-num" style="color:${colors}">${score}/3</div>
+    <div class="score-msg">${msgs[score] || msgs[0]}</div></div>
+    <button class="next-btn" onclick="nextSection()">Continue to Reading →</button>`;
+  document.getElementById('l-score').classList.remove('hidden');
+}
+
+// ═══════════════════════════════════════════════
+// READING
+// ═══════════════════════════════════════════════
+function renderReading(sec){
+  const paras = sec.passage.split('\n\n').map((p,i)=>i===0?`<p><strong>${p}</strong></p>`:`<p>${p}</p>`).join('');
+  return `
+  <div class="tip-box" style="background:#c9a84c12;border:1px solid #c9a84c40">
+    <div class="tip-icon">💡</div>
+    <div><div class="tip-label" style="color:#8a6f2e">STRATEGY TIP</div><div class="tip-text">${sec.tip}</div></div>
+  </div>
+  <div class="two-col">
+    <div>
+      <div class="label">READING PASSAGE</div>
+      <div class="passage-box">${paras}</div>
+    </div>
+    <div>
+      <div class="label">TRUE / FALSE / NOT GIVEN</div>
+      ${sec.questions.map((q,i)=>`
+      <div class="card" id="rq-${i}" style="margin-bottom:12px">
+        <div style="font-family:'Lora',serif;font-size:13px;line-height:1.6;margin-bottom:8px">
+          <span style="font-family:'JetBrains Mono',monospace;color:#7a7060;font-size:11px">${i+1}. </span>${q.s}
+        </div>
+        <div class="tfng-row">
+          <button class="tfng-btn" data-ri="${i}" data-opt="TRUE" onclick="selectTFNG(${i},'TRUE')">TRUE</button>
+          <button class="tfng-btn" data-ri="${i}" data-opt="FALSE" onclick="selectTFNG(${i},'FALSE')">FALSE</button>
+          <button class="tfng-btn ng" data-ri="${i}" data-opt="NOT GIVEN" onclick="selectTFNG(${i},'NOT GIVEN')">NOT GIVEN</button>
+        </div>
+        <div class="explanation hidden" id="rexp-${i}">${q.exp}</div>
+      </div>`).join('')}
+      <button class="submit-btn" id="r-submit" onclick="submitReading()">Submit & See Results</button>
+      <div id="r-score" class="hidden"></div>
+    </div>
+  </div>`;
+}
+
+function selectTFNG(qi, opt){
+  document.querySelectorAll(`[data-ri="${qi}"]`).forEach(b=>{
+    b.classList.remove('selected');
+    if(b.dataset.opt===opt) b.classList.add('selected');
+  });
+}
+
+function submitReading(){
+  const sec = TESTS[currentTest].sections.reading;
+  let score = 0;
+  sec.questions.forEach((q,i)=>{
+    const sel = document.querySelector(`[data-ri="${i}"].selected`);
+    const ans = sel ? sel.dataset.opt : null;
+    document.querySelectorAll(`[data-ri="${i}"]`).forEach(b=>{
+      b.onclick = null;
+      if(b.dataset.opt === q.ans){ b.classList.add('correct'); b.classList.remove('selected'); }
+      else if(b.dataset.opt === ans && ans !== q.ans){ b.classList.add('wrong'); b.classList.remove('selected'); }
+    });
+    if(ans === q.ans) score++;
+    document.getElementById(`rexp-${i}`).classList.remove('hidden');
+  });
+  document.getElementById('r-submit').classList.add('hidden');
+  const color = score>=5?'#5a7a5e':score>=3?'#c9a84c':'#b85c38';
+  const msg = score===6?'Perfect — examiner-level precision':score>=4?'Strong — review missed explanations':'Focus on the FALSE vs NOT GIVEN distinction';
+  document.getElementById('r-score').innerHTML = `
+    <div class="score-box"><div class="score-num" style="color:${color}">${score}/6</div>
+    <div class="score-msg">${msg}</div></div>
+    <button class="next-btn" onclick="nextSection()">Continue to Writing →</button>`;
+  document.getElementById('r-score').classList.remove('hidden');
+}
+
+// ═══════════════════════════════════════════════
+// WRITING
+// ═══════════════════════════════════════════════
+function renderWriting(sec){
+  return `
+  <div class="tip-box" style="background:#b85c3812;border:1px solid #b85c3830">
+    <div class="tip-icon">💡</div>
+    <div><div class="tip-label" style="color:#b85c38">STRATEGY TIP</div><div class="tip-text">${sec.tip}</div></div>
+  </div>
+  <div class="task-tabs">
+    <button class="task-tab active" id="wtab-1" onclick="switchWritingTask(1)">Task 1 — 150 words · 20 min</button>
+    <button class="task-tab" id="wtab-2" onclick="switchWritingTask(2)">Task 2 — 250 words · 40 min</button>
+  </div>
+  <div id="writing-task-1">
+    <div class="prompt-box">
+      <div class="label">TASK 1 PROMPT</div>
+      <p>${sec.task1.prompt}</p>
+      <p style="font-style:italic;color:#7a7060">${sec.task1.chart}</p>
+      <p class="prompt-note">${sec.task1.instructions}</p>
+    </div>
+    <textarea id="w1-text" placeholder="Write your Task 1 response here..." oninput="updateWC(1)"></textarea>
+    <div class="wc low" id="w1-wc">0 / 150 words</div>
+    <button class="submit-btn" id="w1-submit" onclick="submitWriting(1)" style="background:#b85c38">Get AI Examiner Feedback →</button>
+    <div id="w1-loading" class="loading hidden">Claude is reading your response</div>
+    <div id="w1-feedback" class="hidden"></div>
+    <button class="model-toggle" id="w1-model-btn" onclick="toggleModel(1)">Show Model Answer</button>
+    <div class="model-answer" id="w1-model">
+      <div class="label" style="margin-bottom:10px">EXAMINER MODEL ANSWER</div>
+      ${sec.task1.model.split('\n\n').map(p=>`<p>${p}</p>`).join('')}
+    </div>
+  </div>
+  <div id="writing-task-2" class="hidden">
+    <div class="prompt-box">
+      <div class="label">TASK 2 PROMPT</div>
+      <p>${sec.task2.prompt}</p>
+      <p class="prompt-note">${sec.task2.instructions}</p>
+    </div>
+    <textarea id="w2-text" placeholder="Write your Task 2 response here..." style="min-height:280px" oninput="updateWC(2)"></textarea>
+    <div class="wc low" id="w2-wc">0 / 250 words</div>
+    <button class="submit-btn" id="w2-submit" onclick="submitWriting(2)" style="background:#b85c38">Get AI Examiner Feedback →</button>
+    <div id="w2-loading" class="loading hidden">Claude is reading your response</div>
+    <div id="w2-feedback" class="hidden"></div>
+    <button class="model-toggle" id="w2-model-btn" onclick="toggleModel(2)">Show Model Answer</button>
+    <div class="model-answer" id="w2-model">
+      <div class="label" style="margin-bottom:10px">EXAMINER MODEL ANSWER</div>
+      ${sec.task2.model.split('\n\n').map(p=>`<p>${p}</p>`).join('')}
+    </div>
+  </div>
+  <button class="next-btn" id="w-next" onclick="nextSection()" style="margin-top:20px">Continue to Speaking →</button>`;
+}
+
+function switchWritingTask(n){
+  document.getElementById('writing-task-1').classList.toggle('hidden', n!==1);
+  document.getElementById('writing-task-2').classList.toggle('hidden', n!==2);
+  document.getElementById('wtab-1').classList.toggle('active', n===1);
+  document.getElementById('wtab-2').classList.toggle('active', n===2);
+}
+
+function updateWC(n){
+  const text = document.getElementById(`w${n}-text`).value.trim();
+  const wc = text ? text.split(/\s+/).length : 0;
+  const limit = n===1 ? 150 : 250;
+  const el = document.getElementById(`w${n}-wc`);
+  el.textContent = `${wc} / ${limit} words`;
+  el.className = 'wc ' + (wc>=limit?'ok':wc>=limit*0.7?'warn':'low');
+}
+
+function toggleModel(n){
+  const m = document.getElementById(`w${n}-model`);
+  const b = document.getElementById(`w${n}-model-btn`);
+  const show = m.classList.toggle('show');
+  b.textContent = show ? 'Hide Model Answer' : 'Show Model Answer';
+}
+
+async function submitWriting(n){
+  const text = document.getElementById(`w${n}-text`).value.trim();
+  if(text.split(/\s+/).length < 10) return;
+  const sec = TESTS[currentTest].sections.writing;
+  const task = n===1 ? sec.task1 : sec.task2;
+  document.getElementById(`w${n}-submit`).classList.add('hidden');
+  document.getElementById(`w${n}-loading`).classList.remove('hidden');
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        model:"claude-sonnet-4-20250514",
+        max_tokens:1000,
+        system:"You are an expert IELTS examiner. Evaluate writing strictly against the four official IELTS band descriptors. Return ONLY valid JSON, no markdown, no preamble.",
+        messages:[{role:"user",content:`Evaluate this IELTS Task ${n} response.\n\nTask prompt: ${task.prompt}\n\nStudent response:\n${text}\n\nReturn ONLY this JSON:\n{"overall":6.5,"task_achievement":6.5,"coherence_cohesion":6.5,"lexical_resource":6.5,"grammatical_range":6.5,"strengths":[{"quote":"exact quote","explanation":"why it scores well"}],"improvements":[{"original":"quote","improved":"revision","reason":"examiner reasoning"}],"priority":"single most important fix"}`}]
+      })
+    });
+    const data = await res.json();
+    const txt = data.content.map(i=>i.text||'').join('');
+    const fb = JSON.parse(txt.replace(/```json|```/g,'').trim());
+    document.getElementById(`w${n}-loading`).classList.add('hidden');
+    renderWritingFeedback(n, fb);
+  } catch(e){
+    document.getElementById(`w${n}-loading`).classList.add('hidden');
+    document.getElementById(`w${n}-feedback`).innerHTML = `<div style="padding:14px;background:#f2ede0;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;color:#7a7060">Could not connect to AI feedback. Compare your response to the model answer below — use the four band criteria as your checklist.</div>`;
+    document.getElementById(`w${n}-feedback`).classList.remove('hidden');
+  }
+}
+
+function renderWritingFeedback(n, fb){
+  const strengths = (fb.strengths||[]).map(s=>`
+    <div class="strength-item">
+      <div class="strength-quote">"${s.quote}"</div>
+      <div style="font-size:13px;color:#7a7060;line-height:1.6">${s.explanation}</div>
+    </div>`).join('');
+  const improvements = (fb.improvements||[]).map(imp=>`
+    <div class="improve-item">
+      <div class="improve-orig">❌ "${imp.original}"</div>
+      <div class="improve-fix">✅ "${imp.improved}"</div>
+      <div class="improve-why">💡 ${imp.reason}</div>
+    </div>`).join('');
+  document.getElementById(`w${n}-feedback`).innerHTML = `
+    <div class="feedback-header">
+      <div class="label" style="color:#faf8f388;margin-bottom:12px">BAND SCORE ESTIMATE</div>
+      <div class="band-grid">
+        ${[['Overall',fb.overall],['Task',fb.task_achievement],['C&C',fb.coherence_cohesion],['Lexis',fb.lexical_resource],['Grammar',fb.grammatical_range]].map(([l,v])=>`
+        <div class="band-cell"><div class="band-val">${v}</div><div class="band-lbl">${l}</div></div>`).join('')}
+      </div>
+    </div>
+    ${strengths?`<div style="margin-top:16px"><div class="label" style="color:#5a7a5e;margin-bottom:10px">✓ WHAT IS WORKING</div>${strengths}</div>`:''}
+    ${improvements?`<div style="margin-top:16px"><div class="label" style="color:#b85c38;margin-bottom:10px">✗ WHAT TO IMPROVE</div>${improvements}</div>`:''}
+    ${fb.priority?`<div class="priority-box"><div class="priority-lbl">ONE PRIORITY FOR NEXT DRAFT</div><div style="font-size:13px;line-height:1.7">${fb.priority}</div></div>`:''}`;
+  document.getElementById(`w${n}-feedback`).classList.remove('hidden');
+}
+
+// ═══════════════════════════════════════════════
+// SPEAKING
+// ═══════════════════════════════════════════════
+let speakTimers = {};
+
+function renderSpeaking(sec){
+  return `
+  <div class="tip-box" style="background:#5a7a5e12;border:1px solid #5a7a5e30">
+    <div class="tip-icon">💡</div>
+    <div><div class="tip-label" style="color:#5a7a5e">STRATEGY TIP</div><div class="tip-text">${sec.tip}</div></div>
+  </div>
+  <div class="part-tabs">
+    ${sec.parts.map((p,i)=>`<button class="part-tab${i===0?' active':''}" id="ptab-${i}" onclick="switchPart(${i})">${SECTION_ICONS[3]} Part ${p.part}</button>`).join('')}
+  </div>
+  ${sec.parts.map((p,i)=>`
+  <div id="part-${i}" class="${i>0?'hidden':''}">
+    <div style="font-family:'Playfair Display',serif;font-size:20px;margin-bottom:14px">${p.title}</div>
+    ${p.questions?p.questions.map((q,j)=>`<div class="part-question"><span style="font-family:'JetBrains Mono',monospace;color:#7a7060;font-size:11px">${j+1}. </span>${q}</div>`).join(''):''}
+    ${p.cue?`<div class="cue-card"><div class="cue-label">CUE CARD</div><div class="cue-text">${p.cue}</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
+        <button class="timer-btn" style="background:#c9a84c;color:#0f0e0c" onclick="startSpeakTimer('prep-${i}',${p.prep_time||60})">▶ Start 1-min Prep</button>
+        <button class="timer-btn" style="background:#5a7a5e;color:#fff" onclick="startSpeakTimer('speak-${i}',${p.speak_time||120})">▶ Start 2-min Talk</button>
+        <span id="timer-prep-${i}"></span>
+        <span id="timer-speak-${i}"></span>
+      </div></div>`:''}
+    <div class="card" style="background:#f2ede0;border-color:#ddd8c8">
+      <div class="label" style="color:#8a6f2e;margin-bottom:8px">EXAMINER TIP FOR THIS PART</div>
+      <div style="font-size:13px;color:#7a7060;line-height:1.7">${p.tips}</div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:4px">
+      ${i<sec.parts.length-1?`<button class="next-btn" style="flex:1;background:#f2ede0;color:#0f0e0c;border:1px solid #ddd8c8" onclick="switchPart(${i+1})">Next Part →</button>`:''}
+      <button class="next-btn" style="flex:1" onclick="nextSection()">Complete Mock Test ✓</button>
+    </div>
+  </div>`).join('')}`;
+}
+
+function switchPart(i){
+  document.querySelectorAll('[id^="part-"]').forEach((el,idx)=>el.classList.toggle('hidden',idx!==i));
+  document.querySelectorAll('[id^="ptab-"]').forEach((el,idx)=>el.classList.toggle('active',idx===i));
+}
+
+function startSpeakTimer(id, secs){
+  if(speakTimers[id]) return;
+  let left = secs;
+  const el = document.getElementById('timer-'+id);
+  el.style.fontFamily = "'JetBrains Mono',monospace";
+  el.style.fontSize = "14px";
+  el.style.fontWeight = "700";
+  const tick = ()=>{
+    const m = Math.floor(left/60), s = left%60;
+    el.textContent = `${m}:${s.toString().padStart(2,'0')}`;
+    el.style.color = left<30?'#b85c38':'#5a7a5e';
+    if(left<=0){ el.textContent='Done ✓'; return; }
+    left--;
+    speakTimers[id] = setTimeout(tick,1000);
+  };
+  tick();
+}
+</script>
 </body>
 </html>
